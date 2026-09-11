@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  h1= title
+  p Front Express (port 8082) : toutes les requêtes passent par l'API Gateway (9001).
+  ul
+    li
+      a(href='/inventory') Voir l'inventaire
+    li
+      a(href='/orders') Voir les commandes
+    li
+      a(href='/payments') Voir les paiements

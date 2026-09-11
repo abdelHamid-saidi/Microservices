@@ -1,0 +1,13 @@
+doctype html
+html(lang='fr')
+  head
+    meta(charset='utf-8')
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    nav
+      a(href='/') Accueil
+      a(href='/inventory') Inventory
+      a(href='/orders') Orders
+      a(href='/payments') Payments
+    block content

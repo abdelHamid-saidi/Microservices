@@ -1,0 +1,28 @@
+{
+  "name": "loopback-order",
+  "version": "1.0.0",
+  "description": "Microservice LoopBack 4 Order",
+  "main": "dist/index.js",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node .",
+    "prestart": "npm run build"
+  },
+  "dependencies": {
+    "@loopback/boot": "^8.0.16",
+    "@loopback/core": "^7.0.15",
+    "@loopback/repository": "^8.0.15",
+    "@loopback/rest": "^15.0.16",
+    "@loopback/rest-explorer": "^8.0.16",
+    "@loopback/service-proxy": "^8.0.15",
+    "loopback-connector-mongodb": "^8.0.2",
+    "tslib": "^2.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "typescript": "~5.7.3"
+  }
+}

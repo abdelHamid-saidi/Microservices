@@ -1,0 +1,24 @@
+extends layout
+
+block content
+  h1 Inventory
+
+  if error
+    p.error= error
+
+  if books && books.length
+    ul
+      each book in books
+        li #{book.title} - #{book.author}
+  else
+    p Aucun livre pour le moment.
+
+  h2 Add Book:
+  form(method='post', action='/inventory')
+    div
+      label(for='title') Title
+      input#title(type='text', name='title', required)
+    div
+      label(for='author') Author
+      input#author(type='text', name='author', required)
+    button(type='submit') Submit

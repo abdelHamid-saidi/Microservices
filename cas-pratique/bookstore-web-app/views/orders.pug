@@ -1,0 +1,27 @@
+extends layout
+
+block content
+  h1 Orders
+
+  if error
+    p.error= error
+
+  if orders && orders.length
+    ul
+      each order in orders
+        li #{order.customer} - #{order.bookTitle} (x#{order.quantity})
+  else
+    p Aucune commande pour le moment.
+
+  h2 Add Order:
+  form(method='post', action='/orders')
+    div
+      label(for='customer') Customer
+      input#customer(type='text', name='customer', required)
+    div
+      label(for='bookTitle') Book
+      input#bookTitle(type='text', name='bookTitle', required)
+    div
+      label(for='quantity') Quantity
+      input#quantity(type='number', name='quantity', min='1', required)
+    button(type='submit') Submit

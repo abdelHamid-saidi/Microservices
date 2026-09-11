@@ -1,0 +1,12 @@
+{
+  "name": "gateway",
+  "version": "1.0.0",
+  "description": "API Gateway pour inventory, order et payment",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "fast-gateway": "^3.4.7"
+  }
+}

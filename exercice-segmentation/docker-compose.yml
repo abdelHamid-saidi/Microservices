@@ -1,0 +1,101 @@
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    networks:
+      - bookstore-net
+
+  loopback-bookstore:
+    build: ./loopback-bookstore
+    image: loopback-bookstore-img
+    container_name: loopback-bookstore
+    ports:
+      - "3000:3000"
+    environment:
+      HOST: 0.0.0.0
+      PORT: 3000
+      MONGODB_URL: mongodb://mongo:27017/bookstore
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - bookstore-net
+
+  loopback-order:
+    build: ./loopback-order
+    image: loopback-order-img
+    container_name: loopback-order
+    ports:
+      - "3001:3001"
+    environment:
+      HOST: 0.0.0.0
+      PORT: 3001
+      MONGODB_URL: mongodb://mongo:27017/order
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - bookstore-net
+
+  loopback-payment:
+    build: ./loopback-payment
+    image: loopback-payment-img
+    container_name: loopback-payment
+    ports:
+      - "3002:3002"
+    environment:
+      HOST: 0.0.0.0
+      PORT: 3002
+      MONGODB_URL: mongodb://mongo:27017/payment
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - bookstore-net
+
+  gateway:
+    build: ./gateway
+    image: gateway-img
+    container_name: gateway
+    ports:
+      - "9001:9001"
+    depends_on:
+      - loopback-bookstore
+      - loopback-order
+      - loopback-payment
+    networks:
+      - bookstore-net
+
+  bookstore-web-app:
+    build: ./bookstore-web-app
+    image: bookstore-web-app-img
+    container_name: bookstore-web-app
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: 8080
+      INVENTORY_API_URL: http://loopback-bookstore:3000
+      ORDER_API_URL: http://loopback-order:3001
+      PAYMENT_API_URL: http://loopback-payment:3002
+    depends_on:
+      - loopback-bookstore
+      - loopback-order
+      - loopback-payment
+    networks:
+      - bookstore-net
+
+networks:
+  bookstore-net:
+    driver: bridge
+
+volumes:
+  mongo-data:

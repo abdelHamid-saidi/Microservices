@@ -1,0 +1,36 @@
+const express = require('express');
+const axios = require('axios');
+
+const router = express.Router();
+
+const INVENTORY_API_URL =
+  process.env.INVENTORY_API_URL || 'http://loopback-bookstore:3000';
+
+router.get('/', async (req, res) => {
+  try {
+    const {data: books} = await axios.get(`${INVENTORY_API_URL}/books`);
+    res.render('inventory', {
+      title: 'Inventory',
+      books: Array.isArray(books) ? books : [],
+      error: null,
+    });
+  } catch (err) {
+    res.render('inventory', {
+      title: 'Inventory',
+      books: [],
+      error: "Impossible de joindre l'API LoopBack Bookstore.",
+    });
+  }
+});
+
+router.post('/', async (req, res, next) => {
+  try {
+    const {title, author} = req.body;
+    await axios.post(`${INVENTORY_API_URL}/books`, {title, author});
+    res.redirect('/inventory');
+  } catch (err) {
+    next(err);
+  }
+});
+
+module.exports = router;
